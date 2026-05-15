@@ -16,12 +16,22 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // Gender Polling logic with Firebase
-let hasVoted = false;
+let hasVoted = localStorage.getItem('hasVoted') === 'true';
 let localVotesBoy = 0;
 let localVotesGirl = 0;
 
+// On page load, if they have voted, show the results div immediately
+document.addEventListener('DOMContentLoaded', () => {
+    if (hasVoted) {
+        const resultsDiv = document.getElementById('poll-results');
+        if (resultsDiv) {
+            resultsDiv.style.display = 'block';
+        }
+    }
+});
+
 // Listen for real-time poll updates from Firebase
-db.collection('nameGuesses').doc('poll_results').onSnapshot((snap) => {
+db.collection('poll').doc('results').onSnapshot((snap) => {
     if (snap.exists) {
         const data = snap.data();
         localVotesBoy = data.boy || 0;
@@ -53,6 +63,7 @@ function updatePollUI() {
 window.voteGender = async function(gender) {
     if (hasVoted) return;
     hasVoted = true;
+    localStorage.setItem('hasVoted', 'true');
     
     window.changeTheme(gender === 'boy' ? 'blue' : 'pink');
     
@@ -73,7 +84,7 @@ window.voteGender = async function(gender) {
     updatePollUI();
     
     try {
-        const pollRef = db.collection('nameGuesses').doc('poll_results');
+        const pollRef = db.collection('poll').doc('results');
         const inc = firebase.firestore.FieldValue.increment(1);
         if (gender === 'boy') {
             await pollRef.set({ boy: inc }, { merge: true });
@@ -118,7 +129,7 @@ window.guessName = async function() {
         input.value = '';
         
         try {
-            await db.collection("nameGuesses").add({
+            await db.collection("guesses").add({
                 name: name,
                 guessedBy: userName,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
