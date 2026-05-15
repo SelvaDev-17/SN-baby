@@ -49,13 +49,15 @@ function updatePollUI() {
         const resultsDiv = document.getElementById('poll-results');
         const barBoy = document.getElementById('bar-boy');
         const barGirl = document.getElementById('bar-girl');
+        const textBoy = document.getElementById('text-boy');
+        const textGirl = document.getElementById('text-girl');
         
         if (resultsDiv && resultsDiv.style.display !== 'none') {
             barBoy.style.width = percentBoy + '%';
-            barBoy.textContent = `Boy: ${percentBoy}%`;
+            if (textBoy) textBoy.textContent = `${percentBoy}%`;
             
             barGirl.style.width = percentGirl + '%';
-            barGirl.textContent = `Girl: ${percentGirl}%`;
+            if (textGirl) textGirl.textContent = `${percentGirl}%`;
         }
     }
 }
