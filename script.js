@@ -16,7 +16,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // Gender Polling logic with Firebase
-let hasVoted = localStorage.getItem('hasVoted') === 'true';
+let hasVoted = localStorage.getItem('hasVoted_v2') === 'true';
 let localVotesBoy = 0;
 let localVotesGirl = 0;
 
@@ -63,7 +63,7 @@ function updatePollUI() {
 window.voteGender = async function(gender) {
     if (hasVoted) return;
     hasVoted = true;
-    localStorage.setItem('hasVoted', 'true');
+    localStorage.setItem('hasVoted_v2', 'true');
     
     window.changeTheme(gender === 'boy' ? 'blue' : 'pink');
     
